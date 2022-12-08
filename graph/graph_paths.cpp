@@ -52,40 +52,41 @@ typedef long long ll;
 #define f first
 #define s second
 template<class T>
-void read(vector<T>& v){
-    for(auto&i : v){
+void read(vector<T>& v) {
+    for (auto& i : v) {
         cin >> i;
     }
 }
 template<class T>
-void read(vector<pair<T, T>>& v){
-    for(auto&i : v){
+void read(vector<pair<T, T>>& v) {
+    for (auto& i : v) {
         cin >> i.f >> i.s;
     }
 }
 template<class T>
-void read(vector<vector<T>>& v){
-    for(auto&i : v){
-        for(auto&j : i){
+void read(vector<vector<T>>& v) {
+    for (auto& i : v) {
+        for (auto& j : i) {
             cin >> j;
         }
     }
 }
 template<class T>
-void sort(vector<T>& v){
+void sort(vector<T>& v) {
     sort(v.begin(), v.end());
 }
 template<class T>
-void sort(vector<T>& v, int flag){
+void sort(vector<T>& v, int flag) {
     sort(v.begin(), v.end(), greater<T>());
 }
 template<class T>
-ostream& operator<<(ostream& os, const vector<T>& vec){
-    if(vec.size() == 1){
+ostream& operator<<(ostream& os, const vector<T>& vec) {
+    if (vec.size() == 1) {
         os << vec[0];
-    }else{
+    }
+    else {
         typename vector<T>::const_iterator i;
-        for(i = vec.begin(); i != vec.end()-1 ;i++){
+        for (i = vec.begin(); i != vec.end() - 1; i++) {
             os << *i << " ";
         }
         os << *i;
@@ -93,12 +94,46 @@ ostream& operator<<(ostream& os, const vector<T>& vec){
     os << '\n';
     return os;
 }
-void solve(){
-
+int n, m, k;
+const int mod = 1e9 + 7;
+vvll mul(vvll& a, vvll& b) {
+    vvll ans(n, vll(n));
+    For(i, n) {
+        For(j, n) {
+            ll temp = 0;
+            For(k, n) {
+                temp = (temp + a[i][k] * b[k][j] % mod) % mod;
+            }
+            ans[i][j] = temp;
+        }
+    }
+    return ans;
+}
+vvll p(vvll& g, int po) {
+    vvll ans(n, vll(n));
+    For(i, n) ans[i][i] = 1;
+    while (po) {
+        if (po % 2) {
+            ans = mul(ans, g);
+        }
+        g = mul(g, g);
+        po /= 2;
+    }
+    return ans;
 }
 int main()
 {
     cin.tie(0);
     ios::sync_with_stdio(false);
-    cout << -5%3;
+    cin >> n >> m >> k;
+    vvll g(n, vll(n));
+    For(i, m) {
+        int a, b;
+        cin >> a >> b;
+        a--,b--;
+        g[a][b]++;
+    }
+    //g = p(g,2);
+    g = p(g, k);
+    cout << g[0][n - 1] << '\n';
 }
